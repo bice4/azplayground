@@ -2,7 +2,7 @@ on: [push]
 name: Linux_Container_Workflow
 defaults:
   run:
-    working-directory: AzPlayground
+    working-directory: AzPlayground/WeatherApp
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
