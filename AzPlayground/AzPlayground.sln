@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherApp", "WeatherApp\WeatherApp.csproj", "{AE1B396C-D9FD-4A05-85CD-81182D9560AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherApp.UnitTests", "WeatherApp.UnitTests\WeatherApp.UnitTests.csproj", "{BFBC4029-FB2A-477A-8061-BF1149EF04FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE1B396C-D9FD-4A05-85CD-81182D9560AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE1B396C-D9FD-4A05-85CD-81182D9560AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE1B396C-D9FD-4A05-85CD-81182D9560AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE1B396C-D9FD-4A05-85CD-81182D9560AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFBC4029-FB2A-477A-8061-BF1149EF04FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFBC4029-FB2A-477A-8061-BF1149EF04FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFBC4029-FB2A-477A-8061-BF1149EF04FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFBC4029-FB2A-477A-8061-BF1149EF04FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
