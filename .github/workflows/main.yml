@@ -33,6 +33,7 @@ jobs:
       run: dotnet test --no-build --verbosity normal
 
   create-container-image-and-push-to-acr:
+      needs: build-and-test
       runs-on: ubuntu-latest
       steps:
       # checkout the repo
