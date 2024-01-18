@@ -2,7 +2,7 @@ on: [push]
 name: Linux_Container_Workflow
 defaults:
   run:
-    working-directory: ./AzPlayground
+    working-directory: AzPlayground
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
@@ -23,5 +23,5 @@ jobs:
             username: ${{ secrets.REGISTRY_USERNAME }}
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
-            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
-            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
+            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/weatherapp:${{ github.sha }}
+            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/weatherapp:${{ github.sha }}
