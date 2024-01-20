@@ -15,7 +15,8 @@
       "defaultValue": "[resourceGroup().location]",
       "metadata": {
         "description": "Location for all resources."
-      }
+      },
+      "type": "String"
     }
   },
   "variables": {},
@@ -65,5 +66,11 @@
         "metadataSearch": "Disabled"
       }
     }
-  ]
+  ],
+  "outputs": {
+    "acrLoginServer": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('RegistryName'))).loginServer]"
+    }
+  }
 }
