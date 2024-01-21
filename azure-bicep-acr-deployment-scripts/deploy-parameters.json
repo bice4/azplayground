@@ -1,0 +1,6 @@
+{
+  "Subscription": "f68ba142-915e-454b-96c5-ec4f4556a413",
+  "ResourceGroupName": "az-playground-acr-bcp",
+  "ResourceGroupLocation": "polandcentral",
+  "RegistryName": "acrbcpdev"
+}

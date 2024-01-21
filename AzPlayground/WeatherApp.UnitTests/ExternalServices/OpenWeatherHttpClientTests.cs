@@ -51,20 +51,28 @@ public class OpenWeatherHttpClientTests
     }
 
     [Test]
-    public async Task GetWeatherAsync_Should_Return_Null_When_Response_Is_Not_Successful()
+    public async Task
+        GetWeatherByCityNameAsync_Should_Return_ErrorResult_When_Response_Is_Not_Successful_And_HttpStatusCode_Equals_To_NotFound()
     {
         // Arrange
+        var expectedErrorMessage = "City: city not found";
+
         var httpClient = new HttpClient(new MockHttpMessageHandler("{}", HttpStatusCode.NotFound)) {
             BaseAddress = new Uri("http://localhost/")
         };
         var openWeatherHttpClient = new OpenWeatherHttpClient(httpClient, _logger);
 
         // Act
-        var result = await openWeatherHttpClient.GetWeatherAsync("city");
+        var result = await openWeatherHttpClient.GetWeatherByCityNameAsync("city");
 
         // Assert
-        Assert.That(result, Is.Null);
-
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ErrorMessage, Is.EqualTo(expectedErrorMessage));
+            Assert.That(result.Exception, Is.Null);
+            Assert.That(result.IsSuccessful, Is.False);
+        });
         _logger!.Received().Log(Arg.Is(LogLevel.Error),
             Arg.Is<EventId>(0),
             Arg.Is<object>(x => x.ToString()!.Contains("Error getting weather for")),
@@ -73,21 +81,61 @@ public class OpenWeatherHttpClientTests
     }
 
     [Test]
-    public async Task GetWeatherAsync_Should_Return_Null_When_Exception_Is_Raised()
+    public async Task GetWeatherByCityNameAsync_Should_Return_ErrorResult_When_Response_Is_Not_Successful()
     {
         // Arrange
-        var httpClient = new HttpClient(new MockHttpMessageHandler("{}", HttpStatusCode.NotFound, true));
+        var expectedErrorMessage = "Error getting weather for city";
+
+        var httpClient = new HttpClient(new MockHttpMessageHandler("{}", HttpStatusCode.BadRequest)) {
+            BaseAddress = new Uri("http://localhost/")
+        };
         var openWeatherHttpClient = new OpenWeatherHttpClient(httpClient, _logger);
 
         // Act
-        var result = await openWeatherHttpClient.GetWeatherAsync("city");
+        var result = await openWeatherHttpClient.GetWeatherByCityNameAsync("city");
 
         // Assert
-        Assert.That(result, Is.Null);
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ErrorMessage, Is.EqualTo(expectedErrorMessage));
+            Assert.That(result.Exception, Is.Null);
+            Assert.That(result.IsSuccessful, Is.False);
+        });
+        _logger!.Received().Log(Arg.Is(LogLevel.Error),
+            Arg.Is<EventId>(0),
+            Arg.Is<object>(x => x.ToString()!.Contains("Error getting weather for")),
+            Arg.Is<Exception>(x => x == null),
+            Arg.Any<Func<object, Exception, string>>()!);
     }
 
     [Test]
-    public async Task GetWeatherAsync_Should_Return_OpenWeatherModel_When_Response_Is_Successful()
+    public async Task GetWeatherByCityNameAsync_Should_Return_ErrorResult_When_Exception_Is_Raised()
+    {
+        // Arrange
+        var httpClient = new HttpClient(new MockHttpMessageHandler("{}", HttpStatusCode.BadGateway, true));
+        var openWeatherHttpClient = new OpenWeatherHttpClient(httpClient, _logger);
+
+        // Act
+        var result = await openWeatherHttpClient.GetWeatherByCityNameAsync("city");
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ErrorMessage, Is.Null);
+            Assert.That(result.Exception, Is.Not.Null);
+            Assert.That(result.IsSuccessful, Is.False);
+        });
+        _logger!.Received().Log(Arg.Is(LogLevel.Error),
+            Arg.Is<EventId>(0),
+            Arg.Is<object>(x => x.ToString()!.Contains("Exception occured while getting weather for")),
+            Arg.Is<Exception>(x => x != null),
+            Arg.Any<Func<object, Exception, string>>()!);
+    }
+
+    [Test]
+    public async Task GetWeatherByCityNameAsync_Should_Return_SuccessResult_When_Response_Is_Successful()
     {
         // Arrange
         var httpClient = new HttpClient(new MockHttpMessageHandler(RESPONSE, HttpStatusCode.OK)) {
@@ -96,9 +144,93 @@ public class OpenWeatherHttpClientTests
         var openWeatherHttpClient = new OpenWeatherHttpClient(httpClient, _logger);
 
         // Act
-        var result = await openWeatherHttpClient.GetWeatherAsync("city");
+        var result = await openWeatherHttpClient.GetWeatherByCityNameAsync("city");
 
         // Assert
         Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ErrorMessage, Is.Null);
+            Assert.That(result.Exception, Is.Null);
+            Assert.That(result.IsSuccessful, Is.True);
+            Assert.That(result.Weather, Is.Not.Null);
+        });
+    }
+
+    [Test]
+    public async Task GetWeatherByLocationAsync_Should_Return_ErrorResult_When_Response_Is_Not_Successful()
+    {
+        // Arrange
+        var expectedErrorMessage = "Error getting weather";
+
+        var httpClient = new HttpClient(new MockHttpMessageHandler("{}", HttpStatusCode.BadRequest)) {
+            BaseAddress = new Uri("http://localhost/")
+        };
+        var openWeatherHttpClient = new OpenWeatherHttpClient(httpClient, _logger);
+
+        // Act
+        var result = await openWeatherHttpClient.GetWeatherByLocationAsync(0, 0);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ErrorMessage, Is.EqualTo(expectedErrorMessage));
+            Assert.That(result.Exception, Is.Null);
+            Assert.That(result.IsSuccessful, Is.False);
+        });
+        _logger!.Received().Log(Arg.Is(LogLevel.Error),
+            Arg.Is<EventId>(0),
+            Arg.Is<object>(x => x.ToString()!.Contains("Error getting weather for")),
+            Arg.Is<Exception>(x => x == null),
+            Arg.Any<Func<object, Exception, string>>()!);
+    }
+
+    [Test]
+    public async Task GetWeatherByLocationAsync_Should_Return_ErrorResult_When_Exception_Is_Raised()
+    {
+        // Arrange
+        var httpClient = new HttpClient(new MockHttpMessageHandler("{}", HttpStatusCode.BadGateway, true));
+        var openWeatherHttpClient = new OpenWeatherHttpClient(httpClient, _logger);
+
+        // Act
+        var result = await openWeatherHttpClient.GetWeatherByLocationAsync(0,0);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ErrorMessage, Is.Null);
+            Assert.That(result.Exception, Is.Not.Null);
+            Assert.That(result.IsSuccessful, Is.False);
+        });
+        _logger!.Received().Log(Arg.Is(LogLevel.Error),
+            Arg.Is<EventId>(0),
+            Arg.Is<object>(x => x.ToString()!.Contains("Exception occured while getting weather")),
+            Arg.Is<Exception>(x => x != null),
+            Arg.Any<Func<object, Exception, string>>()!);
+    }
+
+    [Test]
+    public async Task GetWeatherByLocationAsync_Should_Return_SuccessResult_When_Response_Is_Successful()
+    {
+        // Arrange
+        var httpClient = new HttpClient(new MockHttpMessageHandler(RESPONSE, HttpStatusCode.OK)) {
+            BaseAddress = new Uri("http://localhost/")
+        };
+        var openWeatherHttpClient = new OpenWeatherHttpClient(httpClient, _logger);
+
+        // Act
+        var result = await openWeatherHttpClient.GetWeatherByLocationAsync(0,0);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ErrorMessage, Is.Null);
+            Assert.That(result.Exception, Is.Null);
+            Assert.That(result.IsSuccessful, Is.True);
+            Assert.That(result.Weather, Is.Not.Null);
+        });
     }
 }

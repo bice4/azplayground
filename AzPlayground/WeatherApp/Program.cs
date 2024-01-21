@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using WeatherApp.ExternalServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,13 +25,39 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-app.MapGet("/weatherforecast/{city}", async (string city, OpenWeatherHttpClient client) =>
+app.MapGet("/cityweather/{city}", async (string city, OpenWeatherHttpClient client) =>
     {
-        var weather = await client.GetWeatherAsync(city);
+        var weather = await client.GetWeatherByCityNameAsync(city);
 
-        return weather is null ? Results.NotFound() : Results.Ok(weather);
+        if (weather.Exception != null)
+        {
+            return Results.Problem("Something went wrong");
+        }
+
+        return weather.ErrorMessage != null
+            ? Results.Problem(weather.ErrorMessage)
+            : Results.Ok(weather.Weather);
     })
-    .WithName("GetWeather")
+    .WithName("GetCityWeather")
+    .WithOpenApi();
+
+app.MapGet("/weather", async (
+        [FromQuery(Name = "lon")] float lon,
+        [FromQuery(Name = "lat")] float lat,
+        OpenWeatherHttpClient client) =>
+    {
+        var weather = await client.GetWeatherByLocationAsync(lon, lat);
+
+        if (weather.Exception != null)
+        {
+            return Results.Problem("Something went wrong");
+        }
+
+        return weather.ErrorMessage != null
+            ? Results.Problem(weather.ErrorMessage)
+            : Results.Ok(weather.Weather);
+    })
+    .WithName("GetLocationWeather")
     .WithOpenApi();
 
 app.Run();
