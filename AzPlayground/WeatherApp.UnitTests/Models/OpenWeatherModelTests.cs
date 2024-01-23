@@ -18,6 +18,21 @@ public class OpenWeatherModelTests
         // Assert
         Assert.That(openWeatherModel.WeatherInfo, Is.EqualTo(weatherArray));
     }
+    
+    [Test]
+    public void Name_Property_ShouldBeSetCorrectly()
+    {
+        // Arrange
+        const string nameValue = "London";
+        
+        // Act
+        var openWeatherModel = new OpenWeatherModel() {
+            Name = nameValue
+        };
+        
+        // Assert
+        Assert.That(openWeatherModel.Name, Is.EqualTo(nameValue));
+    }
 
     [Test]
     public void Temperature_Property_ShouldBeSetCorrectly()

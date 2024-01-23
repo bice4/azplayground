@@ -18,6 +18,9 @@ public class OpenWeatherModel
     
     [JsonPropertyName("timezone")] 
     public int Timezone { get; set; }
+
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
     
     public class Weather
     {
