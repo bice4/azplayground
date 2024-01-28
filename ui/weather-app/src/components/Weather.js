@@ -41,7 +41,7 @@ export default function WeatherComponent() {
 
     // // Make API call to OpenWeatherMap
     // fetch(
-    //   `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=b1bca86efa3b8c46d0aedf824be9b110&units=metric`
+    //   `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=<appId></appId>&units=metric`
     // )
     //   .then((response) => response.json())
     //   .then((data) => {
